@@ -1,0 +1,1 @@
+SELECT DB_NAME() AS db, SUSER_NAME() AS login_name;
