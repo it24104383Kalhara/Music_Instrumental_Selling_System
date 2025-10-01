@@ -191,12 +191,7 @@ To change this template use File | Settings | File Templates.
                         <div>
                             <p class="text-muted mb-1">Total Orders</p>
                             <h3 class="mb-0">
-                                <c:choose>
-                                    <c:when test="${not empty order}">
-                                        ${order.size()}
-                                    </c:when>
-                                    <c:otherwise>0</c:otherwise>
-                                </c:choose>
+                                ${fn:length(orders)}
                             </h3>
                         </div>
                         <div class="stat-icon bg-primary bg-opacity-10 text-primary">
@@ -217,7 +212,7 @@ To change this template use File | Settings | File Templates.
                             <h3 class="mb-0">
                                 <c:set var="pendingCount" value="0" />
                                 <c:forEach var="order" items="${orders}">
-                                    <c:if test="${order.status == 'PENDING'}">
+                                    <c:if test="${fn:containsIgnoreCase(order.status, 'pending')}">
                                         <c:set var="pendingCount" value="${pendingCount + 1}" />
                                     </c:if>
                                 </c:forEach>
@@ -232,17 +227,17 @@ To change this template use File | Settings | File Templates.
             </div>
         </div>
 
-        <!-- Processing Orders Card -->
+        <!-- Processing/Shipped Orders Card -->
         <div class="col-xl-3 col-md-6">
             <div class="card stat-card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <p class="text-muted mb-1">Processing</p>
+                            <p class="text-muted mb-1">In Progress</p>
                             <h3 class="mb-0">
                                 <c:set var="processingCount" value="0" />
                                 <c:forEach var="order" items="${orders}">
-                                    <c:if test="${order.status == 'PROCESSING' or order.status == 'SHIPPED'}">
+                                    <c:if test="${fn:containsIgnoreCase(order.status, 'processing') or fn:containsIgnoreCase(order.status, 'shipped')}">
                                         <c:set var="processingCount" value="${processingCount + 1}" />
                                     </c:if>
                                 </c:forEach>
@@ -267,7 +262,7 @@ To change this template use File | Settings | File Templates.
                             <h3 class="mb-0">
                                 <c:set var="deliveredCount" value="0" />
                                 <c:forEach var="order" items="${orders}">
-                                    <c:if test="${order.status == 'DELIVERED'}">
+                                    <c:if test="${fn:containsIgnoreCase(order.status, 'delivered')}">
                                         <c:set var="deliveredCount" value="${deliveredCount + 1}" />
                                     </c:if>
                                 </c:forEach>
@@ -297,13 +292,6 @@ To change this template use File | Settings | File Templates.
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <!-- Debug Info - Remove after testing -->
-                    <div class="alert alert-info m-3">
-                        Debug: Total orders found: ${fn:length(orders)}<br>
-                        <c:if test="${not empty orders}">
-                            First order: ${orders[0].orderNumber} - Status: "${orders[0].status}"
-                        </c:if>
-                    </div>
 
                     <c:choose>
                         <c:when test="${empty orders}">
