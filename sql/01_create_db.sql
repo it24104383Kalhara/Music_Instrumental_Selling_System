@@ -1,4 +1,4 @@
-/* Create DB if missing */
+/* Create*/
 IF DB_ID(N'music_store') IS NULL
 BEGIN
   CREATE DATABASE music_store;
@@ -12,7 +12,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = N'music_user')
 BEGIN
   CREATE LOGIN music_user 
-    WITH PASSWORD = 'music_pass_123',  -- change for real use
+    WITH PASSWORD = 'music_pass_123',
          CHECK_POLICY = OFF;
 END
 GO
@@ -25,7 +25,7 @@ BEGIN
 END
 GO
 
-/* Optional: set default DB for that login to avoid “default DB” errors */
+/* Optional: set default DB for that login to avoid ï¿½default DBï¿½ errors */
 ALTER LOGIN music_user WITH DEFAULT_DATABASE = music_store;
 GO
 
