@@ -4,14 +4,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome - Order Tracking System</title>
+    <title>Welcome - Musical Instruments Store</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            /* Softer Musical Color Palette */
+            --primary-orange: #FF8C61;
+            --primary-orange-soft: #FFB08A;
+            --primary-terracotta: #C2785C;
+            --primary-cream: #FFF4E6;
+            --accent-gold: #F4C430;
+            --accent-gold-soft: #F9D968;
+            --dark-brown: #6B4423;
+            --light-peach: #FFDAB9;
+            --text-dark: #3A3A3A;
+            --text-light: #6C6C6C;
+            --white: #FFFFFF;
+            --bg-light: #FFFBF7;
+            --bg-section: #FAFAFA;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -19,28 +38,79 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
+            background: var(--white);
         }
 
-        /* Hero Section */
+        /* Navigation Bar */
+        .navbar {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            color: var(--primary-orange) !important;
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-orange) !important;
+        }
+
+        /* Hero Section - Softer */
         .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-cream) 0%, var(--bg-light) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             position: relative;
             overflow: hidden;
+            margin-top: 70px;
         }
 
-        .hero-section::before {
-            content: '';
+        /* Subtle decorative circles */
+        .decorative-circle {
             position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            border-radius: 50%;
+            background: rgba(255, 140, 97, 0.05);
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            left: -50px;
+            background: rgba(244, 196, 48, 0.05);
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            top: 50%;
+            right: 20%;
+            background: rgba(194, 120, 92, 0.05);
         }
 
         .hero-content {
@@ -49,102 +119,195 @@
         }
 
         .hero-title {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 700;
-            color: white;
+            color: var(--dark-brown);
             margin-bottom: 1.5rem;
             animation: fadeInUp 0.8s ease;
         }
 
+        .hero-title span {
+            color: var(--primary-orange);
+        }
+
         .hero-subtitle {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            color: var(--text-dark);
             margin-bottom: 2rem;
             animation: fadeInUp 0.8s ease 0.2s;
             animation-fill-mode: both;
-        }
-
-        .hero-buttons {
-            animation: fadeInUp 0.8s ease 0.4s;
-            animation-fill-mode: both;
+            line-height: 1.6;
         }
 
         .btn-hero {
             padding: 14px 40px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             border-radius: 50px;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            text-decoration: none;
         }
 
         .btn-hero-primary {
-            background: white;
-            color: #667eea;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-soft) 100%);
+            color: white;
             border: none;
+            box-shadow: 0 5px 15px rgba(255, 140, 97, 0.2);
         }
 
         .btn-hero-primary:hover {
-            background: #f8f9fa;
-            color: #667eea;
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(255, 140, 97, 0.3);
+            color: white;
         }
 
         .btn-hero-outline {
             background: transparent;
-            color: white;
-            border: 2px solid white;
+            color: var(--primary-orange);
+            border: 2px solid var(--primary-orange);
+            margin-left: 1rem;
         }
 
         .btn-hero-outline:hover {
-            background: white;
-            color: #667eea;
+            background: var(--primary-orange);
+            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(255, 140, 97, 0.2);
+        }
+
+        /* Musical Illustration - Subtle */
+        .hero-illustration {
+            position: relative;
+            font-size: 6rem;
+            color: rgba(255, 140, 97, 0.15);
+        }
+
+        .instrument-icon {
+            display: inline-block;
+            margin: 0 0.5rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .instrument-icon:nth-child(2) {
+            animation-delay: 2s;
+        }
+
+        .instrument-icon:nth-child(3) {
+            animation-delay: 4s;
+        }
+
+        /* Categories Section */
+        .categories-section {
+            padding: 80px 0;
+            background: var(--white);
+        }
+
+        .section-title {
+            color: var(--dark-brown);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .category-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #F0F0F0;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-orange-soft);
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: var(--primary-cream);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover .category-icon {
+            background: linear-gradient(135deg, var(--primary-orange-soft) 0%, var(--accent-gold-soft) 100%);
+            transform: scale(1.1);
+        }
+
+        .category-title {
+            color: var(--dark-brown);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .category-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
         }
 
         /* Features Section */
         .features-section {
             padding: 80px 0;
-            background: #f8f9fa;
+            background: var(--bg-light);
         }
 
         .feature-card {
             background: white;
-            border-radius: 15px;
+            border-radius: 12px;
             padding: 30px;
             text-align: center;
             transition: all 0.3s ease;
             border: none;
             height: 100%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
 
         .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
         .feature-icon {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             margin: 0 auto 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-orange-soft) 0%, var(--accent-gold-soft) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: white;
         }
 
-        /* Stats Section */
+        .feature-title {
+            color: var(--dark-brown);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        /* Stats Section - Much Softer */
         .stats-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-cream) 0%, var(--light-peach) 50%, var(--primary-cream) 100%);
             padding: 60px 0;
-            color: white;
         }
 
         .stat-item {
@@ -153,14 +316,105 @@
         }
 
         .stat-number {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 10px;
+            color: var(--primary-orange);
         }
 
         .stat-label {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background: var(--white);
+        }
+
+        .btn-cta {
+            display: inline-block;
+            padding: 16px 45px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-soft) 100%);
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 140, 97, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-cta:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 140, 97, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            padding: 40px 0 20px;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .footer h5, .footer h6 {
+            color: var(--primary-orange);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-link {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-orange);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #E8E8E8;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-soft) 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255, 140, 97, 0.3);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(255, 140, 97, 0.4);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Animations */
@@ -176,164 +430,171 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .floating {
-            animation: float 6s ease-in-out infinite;
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
             .hero-subtitle {
-                font-size: 1.1rem;
+                font-size: 1rem;
             }
             .btn-hero {
                 padding: 12px 30px;
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
-        }
-        /* Enhanced CTA Button */
-        /* Enhanced CTA Button */
-        .btn-cta-login {
-            display: inline-block;
-            padding: 18px 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-decoration: none;
-            color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-cta-login:hover {
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-        }
-
-        .btn-cta-login::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn-cta-login:hover::before {
-            left: 100%;
-        }
-
-        .btn-cta-login i {
-            display: inline-block;
-            transition: transform 0.3s ease;
-        }
-
-        .btn-cta-login:hover i {
-            transform: translateX(5px);
-        }
-        /* Back to Top Button */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .back-to-top:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .back-to-top:active {
-            transform: translateY(-2px);
-        }
-
-        .back-to-top.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Pulse animation on hover */
-        .back-to-top:hover i {
-            animation: bounce 0.5s ease infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .back-to-top {
-                bottom: 20px;
-                right: 20px;
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
+            .hero-illustration {
+                font-size: 4rem;
             }
         }
     </style>
 </head>
 <body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            🎵 Musical Store
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#categories">Instruments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#features">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/login">
+                        <i class="bi bi-person-circle"></i> Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
 <!-- Hero Section -->
 <section class="hero-section">
+    <!-- Subtle decorative circles -->
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
+
     <div class="container">
         <div class="row align-items-center min-vh-100">
             <div class="col-lg-6 hero-content">
                 <h1 class="hero-title">
-                    Track Your Orders<br>
-                    <span style="color: rgba(255, 255, 255, 0.9);">Effortlessly</span>
+                    Find Your Perfect<br>
+                    <span>Musical Instrument</span>
                 </h1>
                 <p class="hero-subtitle">
-                    Welcome to our Order Tracking System. Monitor your shipments in real-time,
-                    get instant updates, and manage all your orders in one place.
+                    Discover premium quality instruments from guitars to pianos.
+                    Start your musical journey with the perfect companion from our carefully curated collection.
                 </p>
                 <div class="hero-buttons">
-                    <a href="${pageContext.request.contextPath}/login" class="btn btn-hero btn-hero-primary me-3">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Login Now
+                    <a href="${pageContext.request.contextPath}/login" class="btn btn-hero btn-hero-primary">
+                        <i class="bi bi-music-note-beamed me-2"></i>Shop Now
                     </a>
-                    <a href="#features" class="btn btn-hero btn-hero-outline">
-                        Learn More
+                    <a href="#categories" class="btn btn-hero btn-hero-outline">
+                        Browse Catalog
                     </a>
                 </div>
 
                 <div class="mt-5">
-                    <small class="text-white opacity-75">
-                        <i class="bi bi-shield-check me-2"></i>Secure & Reliable Tracking System
+                    <small style="color: var(--text-light);">
+                        <i class="bi bi-shield-check me-2" style="color: var(--primary-orange);"></i>
+                        Authentic Instruments • Free Shipping • Expert Support
                     </small>
                 </div>
             </div>
 
             <div class="col-lg-6 text-center">
-                <div class="floating">
-                    <i class="bi bi-box-seam" style="font-size: 15rem; color: rgba(255, 255, 255, 0.1);"></i>
+                <div class="hero-illustration">
+                    <span class="instrument-icon">🎸</span>
+                    <span class="instrument-icon">🎹</span>
+                    <span class="instrument-icon">🎻</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section id="categories" class="categories-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 section-title">Explore Our Collection</h2>
+            <p class="section-subtitle">Quality instruments for every musician</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="category-card">
+                    <div class="category-icon">🎸</div>
+                    <h4 class="category-title">Guitars</h4>
+                    <p class="category-description">
+                        Acoustic, Electric & Bass guitars from top brands
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="category-card">
+                    <div class="category-icon">🎹</div>
+                    <h4 class="category-title">Keyboards & Pianos</h4>
+                    <p class="category-description">
+                        Digital pianos, synthesizers & MIDI keyboards
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="category-card">
+                    <div class="category-icon">🥁</div>
+                    <h4 class="category-title">Drums & Percussion</h4>
+                    <p class="category-description">
+                        Drum sets, percussion instruments & accessories
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="category-card">
+                    <div class="category-icon">🎻</div>
+                    <h4 class="category-title">String Instruments</h4>
+                    <p class="category-description">
+                        Violins, cellos, harps & traditional strings
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="category-card">
+                    <div class="category-icon">🎺</div>
+                    <h4 class="category-title">Wind Instruments</h4>
+                    <p class="category-description">
+                        Flutes, saxophones, trumpets & more
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="category-card">
+                    <div class="category-icon">🎵</div>
+                    <h4 class="category-title">Accessories</h4>
+                    <p class="category-description">
+                        Strings, picks, cases & maintenance tools
+                    </p>
                 </div>
             </div>
         </div>
@@ -344,19 +605,19 @@
 <section id="features" class="features-section">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold">Why Choose Our System?</h2>
-            <p class="lead text-muted">Everything you need to manage and track your orders efficiently</p>
+            <h2 class="display-5 section-title">Why Choose Us?</h2>
+            <p class="section-subtitle">Your trusted partner in musical excellence</p>
         </div>
 
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="bi bi-lightning-charge"></i>
+                        <i class="bi bi-award"></i>
                     </div>
-                    <h4>Real-Time Tracking</h4>
+                    <h4 class="feature-title">Premium Quality</h4>
                     <p class="text-muted">
-                        Get instant updates on your order status with our live tracking system
+                        Carefully selected instruments from renowned manufacturers
                     </p>
                 </div>
             </div>
@@ -364,47 +625,11 @@
             <div class="col-md-4">
                 <div class="feature-card">
                     <div class="feature-icon">
-                        <i class="bi bi-graph-up"></i>
+                        <i class="bi bi-truck"></i>
                     </div>
-                    <h4>Detailed Analytics</h4>
+                    <h4 class="feature-title">Free Shipping</h4>
                     <p class="text-muted">
-                        View comprehensive statistics and insights about your order history
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-shield-lock"></i>
-                    </div>
-                    <h4>Secure Platform</h4>
-                    <p class="text-muted">
-                        Your data is protected with enterprise-grade security measures
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-clock-history"></i>
-                    </div>
-                    <h4>Order History</h4>
-                    <p class="text-muted">
-                        Access your complete order history anytime, anywhere
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-bell"></i>
-                    </div>
-                    <h4>Smart Notifications</h4>
-                    <p class="text-muted">
-                        Receive timely alerts about your order status changes
+                        Free delivery on orders above $500 with safe packaging
                     </p>
                 </div>
             </div>
@@ -414,9 +639,45 @@
                     <div class="feature-icon">
                         <i class="bi bi-headset"></i>
                     </div>
-                    <h4>24/7 Support</h4>
+                    <h4 class="feature-title">Expert Support</h4>
                     <p class="text-muted">
-                        Our support team is always ready to help you
+                        Get advice from professional musicians and technicians
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h4 class="feature-title">Warranty</h4>
+                    <p class="text-muted">
+                        Comprehensive warranty and easy return policy
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-credit-card"></i>
+                    </div>
+                    <h4 class="feature-title">Secure Payment</h4>
+                    <p class="text-muted">
+                        Multiple payment options with secure checkout
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-tools"></i>
+                    </div>
+                    <h4 class="feature-title">Setup Service</h4>
+                    <p class="text-muted">
+                        Professional instrument setup and maintenance
                     </p>
                 </div>
             </div>
@@ -430,26 +691,26 @@
         <div class="row">
             <div class="col-md-3 col-6">
                 <div class="stat-item">
-                    <div class="stat-number">20+</div>
-                    <div class="stat-label">Active Users</div>
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Instruments</div>
                 </div>
             </div>
             <div class="col-md-3 col-6">
                 <div class="stat-item">
-                    <div class="stat-number">100+</div>
-                    <div class="stat-label">Orders Tracked</div>
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Happy Customers</div>
                 </div>
             </div>
             <div class="col-md-3 col-6">
                 <div class="stat-item">
-                    <div class="stat-number">99.9%</div>
-                    <div class="stat-label">Uptime</div>
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Brands</div>
                 </div>
             </div>
             <div class="col-md-3 col-6">
                 <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Support</div>
+                    <div class="stat-number">5⭐</div>
+                    <div class="stat-label">Rating</div>
                 </div>
             </div>
         </div>
@@ -457,21 +718,46 @@
 </section>
 
 <!-- Call to Action -->
-<section class="py-5 bg-light">
+<section class="cta-section">
     <div class="container text-center">
-        <h2 class="display-5 fw-bold mb-4">Ready to Get Started?</h2>
-        <p class="lead text-muted mb-4">Join thousands of users who trust our platform for order tracking</p>
-        <a href="${pageContext.request.contextPath}/login" class="btn-cta-login">
-            <i class="bi bi-box-arrow-in-right me-2"></i>
-            <span>Login to Your Account</span>
+        <h2 class="display-5 section-title mb-4">Ready to Start Your Musical Journey?</h2>
+        <p class="section-subtitle mb-4">Browse our collection and find your perfect instrument today</p>
+        <a href="${pageContext.request.contextPath}/login" class="btn-cta">
+            <i class="bi bi-music-note-beamed me-2"></i>
+            Start Shopping
         </a>
     </div>
 </section>
 
 <!-- Footer -->
-<footer class="bg-dark text-white py-4">
-    <div class="container text-center">
-        <p class="mb-0">© 2024 Order Tracking System. All rights reserved.</p>
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5>🎵 Musical Store</h5>
+                <p class="mt-3" style="color: var(--text-light); font-size: 0.95rem;">
+                    Your trusted destination for quality musical instruments since 2024.
+                </p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h6>Quick Links</h6>
+                <ul class="list-unstyled mt-3">
+                    <li class="mb-2"><a href="#" class="footer-link">About Us</a></li>
+                    <li class="mb-2"><a href="#" class="footer-link">Contact</a></li>
+                    <li class="mb-2"><a href="#" class="footer-link">Terms & Conditions</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-4">
+                <h6>Contact Info</h6>
+                <p class="mt-3" style="color: var(--text-light); font-size: 0.95rem;">
+                    <i class="bi bi-envelope me-2"></i> info@musicalstore.com<br>
+                    <i class="bi bi-phone me-2"></i> +1 234 567 890
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom text-center">
+            © 2024 Musical Instruments Store. All rights reserved.
+        </div>
     </div>
 </footer>
 
@@ -479,39 +765,38 @@
 <button id="backToTop" class="back-to-top">
     <i class="bi bi-arrow-up"></i>
 </button>
+
 <!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Smooth Scroll -->
+<!-- Custom Scripts -->
 <script>
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
-    // Back to Top Button Functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        const backToTopButton = document.getElementById('backToTop');
 
-        // Show button when scrolled down 300px
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 300) {
-                backToTopButton.classList.add('show');
-            } else {
-                backToTopButton.classList.remove('show');
-            }
-        });
+    // Back to top button
+    const backToTopButton = document.getElementById('backToTop');
 
-        // Smooth scroll to top when clicked
-        backToTopButton.addEventListener('click', function() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+            backToTopButton.classList.add('show');
+        } else {
+            backToTopButton.classList.remove('show');
+        }
+    });
+
+    backToTopButton.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
         });
     });
 </script>
