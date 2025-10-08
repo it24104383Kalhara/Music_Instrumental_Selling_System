@@ -104,28 +104,4 @@ public class OrderDAO {
     }
 
 
-    // Add this method to OrderDAO.java temporarily for testing
-    public void testConnection() throws SQLException {
-        String sql = "SELECT COUNT(*) as total FROM dbo.customer_order";
-        try (Connection con = DB.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                System.out.println("Total orders in database: " + rs.getInt("total"));
-            }
-        }
-
-        // Also test actual data fetch
-        sql = "SELECT TOP 3 * FROM dbo.customer_order ORDER BY created_at DESC";
-        try (Connection con = DB.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            System.out.println("Sample orders:");
-            while (rs.next()) {
-                System.out.println("- ID: " + rs.getLong("id") +
-                        ", Number: " + rs.getString("order_number") +
-                        ", Status: " + rs.getString("status"));
-            }
-        }
-    }
 }
