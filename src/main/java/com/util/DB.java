@@ -25,6 +25,11 @@ public final class DB {
             // SQL Server driver
             cfg.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
+            cfg.setConnectionTimeout(10000);        // 10 seconds to get connection
+            cfg.setIdleTimeout(300000);             // 5 minutes idle timeout
+            cfg.setMaxLifetime(600000);             // 10 minutes max lifetime
+            cfg.setLeakDetectionThreshold(60000);   // Detect leaks after 60 seconds
+
             // Pool settings
             cfg.setPoolName("MusicStorePool");
             cfg.setMaximumPoolSize(10);

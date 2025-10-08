@@ -18,7 +18,7 @@ public class OrderStatusApiServlet extends HttpServlet {
             resp.getWriter().write("{\"error\":\"missing parameters\"}");
             return;
         }
-        long id = Long.parseLong(idStr);
+        int id = Integer.parseInt(idStr);
         try {
             String status = new OrderDAO().getStatus(id, userId);
             if (status == null) {

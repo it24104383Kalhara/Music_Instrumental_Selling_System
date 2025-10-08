@@ -15,8 +15,6 @@ public class DashboardServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        // Get userId from session (same as OrderListServlet)
         HttpSession session = req.getSession();
         Integer userId = (Integer) session.getAttribute("userId");
 
@@ -26,19 +24,14 @@ public class DashboardServlet extends HttpServlet {
         }
 
         try {
-            // Fetch orders from database (same pattern as OrderListServlet)
             OrderDAO orderDAO = new OrderDAO();
-            List<Order> orders = orderDAO.recentByUser(userId, 20);  // Get 20 recent orders
+            List<Order> orders = orderDAO.recentByUser(userId, 20);
 
             System.out.println("Dashboard: Fetched " + orders.size() + " orders for user " + userId);
 
-            // Set orders attribute
             req.setAttribute("orders", orders);
-
-            // Also set user info for welcome message
             req.setAttribute("user", session.getAttribute("userEmail"));
 
-            // Forward to JSP
             req.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
 
         } catch (SQLException e) {

@@ -32,9 +32,11 @@ public class LoginServlet extends HttpServlet {
             User user = userDAO.findByEmail(email);
             if (user != null && PasswordUtil.verify(password,user.getPasswordHash())) {
                 HttpSession session = req.getSession(true);
-                session.setAttribute("userId", user.getId());
+                session.setAttribute("userId", user.getUserId());
                 session.setAttribute("userEmail", user.getEmail());
                 session.setAttribute("userName", user.getFullName());
+                // Update last login timestamp
+                userDAO.updateLastLogin(user.getUserId());
 
                 resp.sendRedirect(req.getContextPath() + "/dashboard");
                 return;
