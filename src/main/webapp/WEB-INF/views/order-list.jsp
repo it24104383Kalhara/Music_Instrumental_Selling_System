@@ -469,94 +469,94 @@
         </div>
     </div>
 
-    <!-- Orders Section -->
-    <div class="card orders-card">
-        <div class="card-body p-0">
-            <c:choose>
-                <c:when test="${empty orders}">
-                    <!-- Empty State -->
-                    <div class="empty-state">
-                        <i class="bi bi-music-note-list"></i>
-                        <h4>No orders found</h4>
-                        <p>You haven't placed any instrument orders yet.</p>
-                        <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-back mt-3">
-                            <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
-                        </a>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <!-- Orders Table -->
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0" id="ordersTable">
-                            <thead>
-                            <tr>
-                                <th class="px-4">Order Number</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <c:forEach items="${orders}" var="order">
-                                <tr class="order-row" data-status="${order.status}" data-order="${order.orderNumber}">
-                                    <td class="px-4">
-                                        <i class="bi bi-music-note-beamed me-2" style="color: var(--primary-orange);"></i>
-                                        <strong><c:out value="${order.orderNumber}"/></strong>
-                                    </td>
-                                    <td>
-                                        <c:set var="upperStatus" value="${fn:toUpperCase(order.status)}" />
-                                        <c:choose>
-                                            <c:when test="${upperStatus == 'PENDING' or order.status == 'Pending'}">
-                                                    <span class="badge order-badge badge-pending">
-                                                        <i class="bi bi-clock me-1"></i>Pending
-                                                    </span>
-                                            </c:when>
-                                            <c:when test="${upperStatus == 'PROCESSING' or order.status == 'Processing'}">
-                                                    <span class="badge order-badge badge-processing">
-                                                        <i class="bi bi-gear me-1"></i>Processing
-                                                    </span>
-                                            </c:when>
-                                            <c:when test="${upperStatus == 'SHIPPED' or order.status == 'Shipped'}">
-                                                    <span class="badge order-badge badge-shipped">
-                                                        <i class="bi bi-truck me-1"></i>Shipped
-                                                    </span>
-                                            </c:when>
-                                            <c:when test="${upperStatus == 'DELIVERED' or order.status == 'Delivered'}">
-                                                    <span class="badge order-badge badge-delivered">
-                                                        <i class="bi bi-check-circle me-1"></i>Delivered
-                                                    </span>
-                                            </c:when>
-                                            <c:when test="${upperStatus == 'CANCELLED' or order.status == 'Cancelled'}">
-                                                    <span class="badge order-badge badge-cancelled">
-                                                        <i class="bi bi-x-circle me-1"></i>Cancelled
-                                                    </span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                    <span class="badge order-badge bg-secondary">
-                                                        <c:out value="${order.status}"/>
-                                                    </span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <i class="bi bi-calendar3 me-1" style="color: var(--text-light);"></i>
-                                        <c:out value="${order.createdAt}"/>
-                                    </td>
-                                    <td>
-                                        <a href="${pageContext.request.contextPath}/orders/view?id=${order.orderId}"
-                                           class="btn btn-sm btn-view-details">
-                                            <i class="bi bi-eye"></i> View Details
-                                        </a>
-                                    </td>
+        <!-- Orders Section -->
+        <div class="card orders-card">
+            <div class="card-body p-0">
+                <c:choose>
+                    <c:when test="${empty orders}">
+                        <!-- Empty State -->
+                        <div class="empty-state">
+                            <i class="bi bi-music-note-list"></i>
+                            <h4>No orders found</h4>
+                            <p>You haven't placed any instrument orders yet.</p>
+                            <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-back mt-3">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <!-- Orders Table -->
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="ordersTable">
+                                <thead>
+                                <tr>
+                                    <th class="px-4">Order Number</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
                                 </tr>
-                            </c:forEach>
-                            </tbody>
-                        </table>
-                    </div>
-                </c:otherwise>
-            </c:choose>
+                                </thead>
+                                <tbody>
+                                <c:forEach items="${orders}" var="order">
+                                    <tr class="order-row" data-status="${order.status}" data-order="${order.orderNumber}">
+                                        <td class="px-4">
+                                            <i class="bi bi-music-note-beamed me-2" style="color: var(--primary-orange);"></i>
+                                            <strong><c:out value="${order.orderNumber}"/></strong>
+                                        </td>
+                                        <td>
+                                            <c:set var="upperStatus" value="${fn:toUpperCase(order.status)}" />
+                                            <c:choose>
+                                                <c:when test="${upperStatus == 'PENDING' or order.status == 'Pending'}">
+                                                        <span class="badge order-badge badge-pending">
+                                                            <i class="bi bi-clock me-1"></i>Pending
+                                                        </span>
+                                                </c:when>
+                                                <c:when test="${upperStatus == 'PROCESSING' or order.status == 'Processing'}">
+                                                        <span class="badge order-badge badge-processing">
+                                                            <i class="bi bi-gear me-1"></i>Processing
+                                                        </span>
+                                                </c:when>
+                                                <c:when test="${upperStatus == 'SHIPPED' or order.status == 'Shipped'}">
+                                                        <span class="badge order-badge badge-shipped">
+                                                            <i class="bi bi-truck me-1"></i>Shipped
+                                                        </span>
+                                                </c:when>
+                                                <c:when test="${upperStatus == 'DELIVERED' or order.status == 'Delivered'}">
+                                                        <span class="badge order-badge badge-delivered">
+                                                            <i class="bi bi-check-circle me-1"></i>Delivered
+                                                        </span>
+                                                </c:when>
+                                                <c:when test="${upperStatus == 'CANCELLED' or order.status == 'Cancelled'}">
+                                                        <span class="badge order-badge badge-cancelled">
+                                                            <i class="bi bi-x-circle me-1"></i>Cancelled
+                                                        </span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                        <span class="badge order-badge bg-secondary">
+                                                            <c:out value="${order.status}"/>
+                                                        </span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            <i class="bi bi-calendar3 me-1" style="color: var(--text-light);"></i>
+                                            <c:out value="${order.createdAt}"/>
+                                        </td>
+                                        <td>
+                                            <a href="${pageContext.request.contextPath}/orders/view?id=${order.orderId}"
+                                               class="btn btn-sm btn-view-details">
+                                                <i class="bi bi-eye"></i> View Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
-    </div>
 </div>
 
 <!-- Bootstrap JS Bundle -->
