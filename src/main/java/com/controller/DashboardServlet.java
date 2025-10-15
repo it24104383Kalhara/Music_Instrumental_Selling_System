@@ -7,35 +7,40 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/dashboard")
 public class DashboardServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        Integer userId = (Integer) session.getAttribute("userId");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-        if (userId == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
+        HttpSession session = request.getSession(false);
+
+        // Check if user is logged in
+        if (session == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
+        // Get user ID from session
+        int userId = (int) session.getAttribute("userId");
+
         try {
             OrderDAO orderDAO = new OrderDAO();
-            List<Order> orders = orderDAO.recentByUser(userId, 20);
 
-            System.out.println("Dashboard: Fetched " + orders.size() + " orders for user " + userId);
+            // Fetch user's orders (all of them, or use recentByUser(userId, 10) for limit)
+            List<Order> orders = orderDAO.getAllByUser(userId);
 
-            req.setAttribute("orders", orders);
-            req.setAttribute("user", session.getAttribute("userEmail"));
+            // Set orders as request attribute
+            request.setAttribute("orders", orders);
 
-            req.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(req, resp);
+            // Forward to dashboard JSP
+            request.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
 
         } catch (SQLException e) {
-            throw new ServletException("Failed to load dashboard", e);
+            throw new ServletException("Failed to load orders", e);
         }
     }
 }

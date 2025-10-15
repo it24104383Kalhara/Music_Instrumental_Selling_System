@@ -8,15 +8,13 @@ import java.time.LocalDateTime;
 public class UserDAO {
 
     /**
-     * Find user by email (joins with UserEmail table)
+     * Find user by email (NEW SCHEMA: dbo.app_user)
      */
     public User findByEmail(String email) throws SQLException {
         String sql =
-                "SELECT u.user_id, u.first_name, u.last_name, u.password_hash, " +
-                        "       u.status, u.created_at, u.last_login, ue.email " +
-                        "FROM music.[User] u " +
-                        "INNER JOIN music.UserEmail ue ON u.user_id = ue.user_id " +
-                        "WHERE ue.email = ? AND ue.is_primary = 1";
+                "SELECT id, email, password, full_name, role, created_at " +
+                        "FROM dbo.app_user " +
+                        "WHERE email = ?";
 
         try (Connection con = DB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -24,14 +22,12 @@ public class UserDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     User u = new User();
-                    u.setUserId(rs.getInt("user_id"));
-                    u.setFirstName(rs.getString("first_name"));
-                    u.setLastName(rs.getString("last_name"));
+                    u.setId(rs.getInt("id"));
                     u.setEmail(rs.getString("email"));
-                    u.setPasswordHash(rs.getString("password_hash"));
-                    u.setStatus(rs.getString("status"));
-                    u.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-                    u.setLastLogin(rs.getObject("last_login", LocalDateTime.class));
+                    u.setPassword(rs.getString("password"));
+                    u.setFullName(rs.getString("full_name"));
+                    u.setRole(rs.getString("role"));
+                    u.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                     return u;
                 }
                 return null;
@@ -44,11 +40,9 @@ public class UserDAO {
      */
     public User findById(int userId) throws SQLException {
         String sql =
-                "SELECT u.user_id, u.first_name, u.last_name, u.password_hash, " +
-                        "       u.status, u.created_at, u.last_login, ue.email " +
-                        "FROM music.[User] u " +
-                        "LEFT JOIN music.UserEmail ue ON u.user_id = ue.user_id AND ue.is_primary = 1 " +
-                        "WHERE u.user_id = ?";
+                "SELECT id, email, password, full_name, role, created_at " +
+                        "FROM dbo.app_user " +
+                        "WHERE id = ?";
 
         try (Connection con = DB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -56,14 +50,12 @@ public class UserDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     User u = new User();
-                    u.setUserId(rs.getInt("user_id"));
-                    u.setFirstName(rs.getString("first_name"));
-                    u.setLastName(rs.getString("last_name"));
+                    u.setId(rs.getInt("id"));
                     u.setEmail(rs.getString("email"));
-                    u.setPasswordHash(rs.getString("password_hash"));
-                    u.setStatus(rs.getString("status"));
-                    u.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-                    u.setLastLogin(rs.getObject("last_login", LocalDateTime.class));
+                    u.setPassword(rs.getString("password"));
+                    u.setFullName(rs.getString("full_name"));
+                    u.setRole(rs.getString("role"));
+                    u.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                     return u;
                 }
                 return null;
@@ -72,85 +64,42 @@ public class UserDAO {
     }
 
     /**
-     * Create new user with email (inserts into User, UserEmail, and Customer tables)
+     * Create new user (simplified - just one table)
      */
-    public int create(String email, String firstName, String lastName, String passwordHash) throws SQLException {
-        Connection conn = null;
-        try {
-            conn = DB.getConnection();
-            conn.setAutoCommit(false); // Start transaction
+    public int create(String email, String fullName, String password) throws SQLException {
+        String sql =
+                "INSERT INTO dbo.app_user (email, password, full_name, role) " +
+                        "VALUES (?, ?, ?, 'Customer')";
 
-            int userId;
+        try (Connection conn = DB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, email.toLowerCase());
+            ps.setString(2, password);  // Should be hashed before calling this
+            ps.setString(3, fullName);
+            ps.executeUpdate();
 
-            // 1. Insert into User table
-            String sqlUser =
-                    "INSERT INTO music.[User] (first_name, last_name, password_hash, status) " +
-                            "VALUES (?, ?, ?, 'active')";
-            try (PreparedStatement ps = conn.prepareStatement(sqlUser, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, firstName);
-                ps.setString(2, lastName);
-                ps.setString(3, passwordHash);
-                ps.executeUpdate();
-
-                try (ResultSet keys = ps.getGeneratedKeys()) {
-                    if (keys.next()) {
-                        userId = keys.getInt(1);
-                    } else {
-                        throw new SQLException("Failed to get user_id");
-                    }
-                }
-            }
-
-            // 2. Insert into UserEmail table
-            String sqlEmail =
-                    "INSERT INTO music.UserEmail (user_id, email, is_primary) VALUES (?, ?, 1)";
-            try (PreparedStatement ps = conn.prepareStatement(sqlEmail)) {
-                ps.setInt(1, userId);
-                ps.setString(2, email.toLowerCase());
-                ps.executeUpdate();
-            }
-
-            // 3. Insert into Customer table (make them a customer)
-            String sqlCustomer =
-                    "INSERT INTO music.Customer (user_id) VALUES (?)";
-            try (PreparedStatement ps = conn.prepareStatement(sqlCustomer)) {
-                ps.setInt(1, userId);
-                ps.executeUpdate();
-            }
-
-            conn.commit(); // Commit transaction
-            return userId;
-
-        } catch (SQLException e) {
-            if (conn != null) {
-                try {
-                    conn.rollback(); // Rollback on error
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            throw e;
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.setAutoCommit(true);
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return keys.getInt(1);
+                } else {
+                    throw new SQLException("Failed to get user id");
                 }
             }
         }
     }
 
     /**
-     * Update last login timestamp
+     * Update last login (NOT IN NEW SCHEMA - removing this)
+     * You can add a last_login column if needed
      */
     public void updateLastLogin(int userId) throws SQLException {
-        String sql = "UPDATE music.[User] SET last_login = GETDATE() WHERE user_id = ?";
-        try (Connection conn = DB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ps.executeUpdate();
-        }
+        // No last_login column in new schema
+        // If you want this feature, add this column:
+        // ALTER TABLE dbo.app_user ADD last_login DATETIME2 NULL;
+
+        // Then use this query:
+        // String sql = "UPDATE dbo.app_user SET last_login = SYSUTCDATETIME() WHERE id = ?";
+
+        // For now, do nothing
     }
 }

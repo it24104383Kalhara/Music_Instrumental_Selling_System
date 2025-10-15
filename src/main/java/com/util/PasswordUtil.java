@@ -1,9 +1,6 @@
 package com.util;
 
-/**
- * Central place to hash and check passwords
- * DEVELOPMENT MODE: Using plain text comparison
- */
+
 public final class PasswordUtil {
 
     // Set to true for BCrypt, false for plain text

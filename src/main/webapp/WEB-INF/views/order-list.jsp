@@ -543,7 +543,7 @@
                                             <c:out value="${order.createdAt}"/>
                                         </td>
                                         <td>
-                                            <a href="${pageContext.request.contextPath}/orders/view?id=${order.orderId}"
+                                            <a href="${pageContext.request.contextPath}/orders/view?id=${order.id}"
                                                class="btn btn-sm btn-view-details">
                                                 <i class="bi bi-eye"></i> View Details
                                             </a>

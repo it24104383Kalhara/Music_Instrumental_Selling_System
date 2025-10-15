@@ -19,7 +19,7 @@ public class OrderDetailsServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/orders");
             return;
         }
-        int id = Integer.parseInt(idStr);
+        long id = Long.parseLong(idStr);
         try {
             Order o = new OrderDAO().findByIdAndUser(id, userId);
             if (o == null){  // not this user's order or not found

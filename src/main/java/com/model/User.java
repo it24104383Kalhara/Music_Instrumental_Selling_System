@@ -3,60 +3,32 @@ package com.model;
 import java.time.LocalDateTime;
 
 public class User {
-    private int userId;
-    private String firstName;
-    private String lastName;
-    private String email;  // From UserEmail table (primary email)
-    private String passwordHash;
-    private String status;
+    private int id;  // Changed from userId
+    private String email;
+    private String password;  // For form input
+    private String fullName;  // Changed from firstName/lastName
+    private String role;  // NEW: Admin or Customer
     private LocalDateTime createdAt;
-    private LocalDateTime lastLogin;
 
-
+    // Constructors
     public User() {
     }
 
-    public User(int userId, String firstName, String lastName, String email) {
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(int id, String email, String fullName, String role) {
+        this.id = id;
         this.email = email;
+        this.fullName = fullName;
+        this.role = role;
     }
 
-    public int getUserId() {
-        return userId;
+    // Getters and Setters
+    public int getId() {
+        return id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setId(int id) {
+        this.id = id;
     }
-
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    // Convenience method for full name
-    public String getFullName() {
-        if (firstName == null && lastName == null) return "";
-        if (firstName == null) return lastName;
-        if (lastName == null) return firstName;
-        return firstName + " " + lastName;
-    }
-
 
     public String getEmail() {
         return email;
@@ -66,24 +38,29 @@ public class User {
         this.email = email;
     }
 
-    // passwordHash
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-
-    public String getStatus() {
-        return status;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -93,23 +70,18 @@ public class User {
         this.createdAt = createdAt;
     }
 
-
-    public LocalDateTime getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(LocalDateTime lastLogin) {
-        this.lastLogin = lastLogin;
+    // Utility method to check if user is admin
+    public boolean isAdmin() {
+        return "Admin".equalsIgnoreCase(this.role);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "userId=" + userId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                "id=" + id +
                 ", email='" + email + '\'' +
-                ", status='" + status + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

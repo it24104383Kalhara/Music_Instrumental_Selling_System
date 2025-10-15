@@ -532,7 +532,7 @@ To change this template use File | Settings | File Templates.
                                     <tbody>
                                     <c:forEach var="o" items="${orders}" varStatus="loop">
                                         <c:if test="${loop.index < 3}">
-                                            <tr onclick="window.location='${pageContext.request.contextPath}/orders/view?id=${o.orderId}'" style="cursor: pointer;">
+                                            <tr onclick="window.location='${pageContext.request.contextPath}/orders/view?id=${o.id}'" style="cursor: pointer;">
                                                 <td class="px-4">
                                                     <i class="bi bi-music-note-beamed me-2" style="color: var(--primary-orange);"></i>
                                                     <strong>${o.orderNumber}</strong>
@@ -570,7 +570,7 @@ To change this template use File | Settings | File Templates.
                                                         ${o.createdAt}
                                                 </td>
                                                 <td>
-                                                    <a href="${pageContext.request.contextPath}/orders/view?id=${o.orderId}"
+                                                    <a href="${pageContext.request.contextPath}/orders/view?id=${o.id}"
                                                        class="btn btn-sm btn-outline-view"
                                                        onclick="event.stopPropagation();">
                                                         <i class="bi bi-eye me-1"></i>View Details

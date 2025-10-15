@@ -4,23 +4,21 @@ import com.model.Order;
 import com.util.DB;
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAO {
 
     /**
-     * Get recent orders by user (SIMPLIFIED - NO JOINS)
+     * Get orders by user ID (for customer dashboard)
      */
     public List<Order> recentByUser(int userId, int limit) throws SQLException {
         String sql =
-                "SELECT o.order_id, o.order_datetime, o.subtotal, o.delivery_fee, o.total, " +
-                        "       o.status, o.created_at " +
-                        "FROM music.[Order] o " +
-                        "INNER JOIN music.Places pl ON o.order_id = pl.order_id " +
-                        "WHERE pl.user_id = ? " +
-                        "ORDER BY o.created_at DESC " +
+                "SELECT id, user_id, order_number, status, total_amount, " +
+                        "       created_at, updated_at, shipping_address " +
+                        "FROM dbo.customer_order " +
+                        "WHERE user_id = ? " +
+                        "ORDER BY created_at DESC " +
                         "OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY";
 
         List<Order> list = new ArrayList<>();
@@ -28,58 +26,35 @@ public class OrderDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setInt(2, limit);
-            ps.setQueryTimeout(5);  // 5 second timeout
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Order o = new Order();
-                    o.setOrderId(rs.getInt("order_id"));
-                    o.setOrderDatetime(rs.getObject("order_datetime", LocalDateTime.class));
-                    o.setSubtotal(rs.getBigDecimal("subtotal"));
-                    o.setDeliveryFee(rs.getBigDecimal("delivery_fee"));
-                    o.setTotal(rs.getBigDecimal("total"));
-                    o.setStatus(rs.getString("status"));
-                    o.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-
-                    // Set defaults for missing data
-                    o.setPaymentStatus("Pending");
-                    o.setShipmentStatus("Not Shipped");
-
-                    list.add(o);
+                    list.add(mapBasic(rs));
                 }
             }
-        } catch (SQLException e) {
-            System.err.println("ERROR in recentByUser: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
         }
         return list;
     }
+
     /**
-     * Get all orders (for admin dashboard)
+     * Get ALL orders by user (no limit)
      */
-    public List<Order> getAllOrders() throws SQLException {
+    public List<Order> getAllByUser(int userId) throws SQLException {
         String sql =
-                "SELECT o.order_id, o.order_datetime, o.subtotal, o.delivery_fee, o.total, " +
-                        "       o.status, o.created_at, " +
-                        "       p.payment_id, p.status AS payment_status, " +
-                        "       s.shipment_id, s.status AS shipment_status, " +
-                        "       u.first_name, u.last_name, pl.user_id " +
-                        "FROM music.[Order] o " +
-                        "INNER JOIN music.Places pl ON o.order_id = pl.order_id " +
-                        "INNER JOIN music.[User] u ON pl.user_id = u.user_id " +
-                        "LEFT JOIN music.OrderPayment op ON o.order_id = op.order_id " +
-                        "LEFT JOIN music.PaymentAttempt p ON op.payment_id = p.payment_id " +
-                        "LEFT JOIN music.OrderShipment os ON o.order_id = os.order_id " +
-                        "LEFT JOIN music.Shipment s ON os.shipment_id = s.shipment_id " +
-                        "ORDER BY o.created_at DESC";
+                "SELECT id, user_id, order_number, status, total_amount, " +
+                        "       created_at, updated_at, shipping_address " +
+                        "FROM dbo.customer_order " +
+                        "WHERE user_id = ? " +
+                        "ORDER BY created_at DESC";
 
         List<Order> list = new ArrayList<>();
         try (Connection con = DB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    list.add(mapWithDetails(rs));
+                    list.add(mapBasic(rs));
                 }
             }
         }
@@ -87,42 +62,53 @@ public class OrderDAO {
     }
 
     /**
-     * Find order by ID and user
+     * Get ALL orders with customer info (for admin dashboard)
      */
-    public Order findByIdAndUser(int orderId, int userId) throws SQLException {
+    public List<Order> getAllOrdersWithCustomerInfo() throws SQLException {
         String sql =
-                "SELECT o.order_id, o.order_datetime, o.subtotal, o.delivery_fee, o.total, " +
-                        "       o.status, o.created_at, " +
-                        "       p.payment_id, p.status AS payment_status, " +
-                        "       s.shipment_id, s.status AS shipment_status, s.tracking_no, " +
-                        "       s.shipped_at, s.delivered_at, " +
-                        "       u.first_name, u.last_name, " +
-                        "       sa.line1, sa.city, sa.postal_code " +
-                        "FROM music.[Order] o " +
-                        "INNER JOIN music.Places pl ON o.order_id = pl.order_id " +
-                        "INNER JOIN music.[User] u ON pl.user_id = u.user_id " +
-                        "LEFT JOIN music.OrderPayment op ON o.order_id = op.order_id " +
-                        "LEFT JOIN music.PaymentAttempt p ON op.payment_id = p.payment_id " +
-                        "LEFT JOIN music.OrderShipment os ON o.order_id = os.order_id " +
-                        "LEFT JOIN music.Shipment s ON os.shipment_id = s.shipment_id " +
-                        "LEFT JOIN music.OrderShippingAddress osa ON o.order_id = osa.order_id " +
-                        "LEFT JOIN music.ShippingAddress sa ON osa.address_id = sa.address_id " +
-                        "WHERE o.order_id = ? AND pl.user_id = ?";
+                "SELECT o.id, o.user_id, o.order_number, o.status, o.total_amount, " +
+                        "       o.created_at, o.updated_at, o.shipping_address, " +
+                        "       u.full_name, u.email " +
+                        "FROM dbo.customer_order o " +
+                        "INNER JOIN dbo.app_user u ON o.user_id = u.id " +
+                        "ORDER BY o.created_at DESC";
+
+        List<Order> list = new ArrayList<>();
+        try (Connection con = DB.getConnection();
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Order order = mapBasic(rs);
+                order.setCustomerName(rs.getString("full_name"));
+                order.setCustomerEmail(rs.getString("email"));
+                list.add(order);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * Get order by ID and user
+     */
+    public Order findByIdAndUser(long orderId, int userId) throws SQLException {
+        String sql =
+                "SELECT o.id, o.user_id, o.order_number, o.status, o.total_amount, " +
+                        "       o.created_at, o.updated_at, o.shipping_address, " +
+                        "       u.full_name, u.email " +
+                        "FROM dbo.customer_order o " +
+                        "INNER JOIN dbo.app_user u ON o.user_id = u.id " +
+                        "WHERE o.id = ? AND o.user_id = ?";
 
         try (Connection con = DB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, orderId);
+            ps.setLong(1, orderId);
             ps.setInt(2, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Order order = mapWithDetails(rs);
-                    // Add shipping address
-                    String addr = rs.getString("line1");
-                    if (addr != null) {
-                        order.setShippingAddress(addr + ", " +
-                                rs.getString("city") + " " +
-                                rs.getString("postal_code"));
-                    }
+                    Order order = mapBasic(rs);
+                    order.setCustomerName(rs.getString("full_name"));
+                    order.setCustomerEmail(rs.getString("email"));
                     return order;
                 }
                 return null;
@@ -131,134 +117,117 @@ public class OrderDAO {
     }
 
     /**
-     * Get order status
+     * Update order status (ADMIN ONLY)
+     */
+    public boolean updateOrderStatus(long orderId, String newStatus) throws SQLException {
+        String sql =
+                "UPDATE dbo.customer_order " +
+                        "SET status = ?, updated_at = SYSUTCDATETIME() " +
+                        "WHERE id = ?";
+
+        try (Connection conn = DB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newStatus);
+            ps.setLong(2, orderId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        }
+    }
+
+    /**
+     * Get order count by status (for admin statistics)
+     */
+    public int getOrderCountByStatus(String status) throws SQLException {
+        String sql = "SELECT COUNT(*) as count FROM dbo.customer_order WHERE status = ?";
+
+        try (Connection conn = DB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Get order status by order ID and user ID
+     * Used by OrderStatusApiServlet for tracking
      */
     public String getStatus(int orderId, int userId) throws SQLException {
         String sql =
-                "SELECT o.status FROM music.[Order] o " +
-                        "INNER JOIN music.Places p ON o.order_id = p.order_id " +
-                        "WHERE o.order_id = ? AND p.user_id = ?";
+                "SELECT status FROM dbo.customer_order " +
+                        "WHERE id = ? AND user_id = ?";
 
         try (Connection con = DB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ps.setInt(2, userId);
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() ? rs.getString(1) : null;
+                return rs.next() ? rs.getString("status") : null;
             }
         }
     }
 
     /**
-     * Insert new order (creates order and links to user via Places table)
+     * Get total orders count
      */
-    public int insert(int userId, BigDecimal subtotal, BigDecimal deliveryFee, BigDecimal total) throws SQLException {
-        Connection conn = null;
-        try {
-            conn = DB.getConnection();
-            conn.setAutoCommit(false);
+    public int getTotalOrdersCount() throws SQLException {
+        String sql = "SELECT COUNT(*) as count FROM dbo.customer_order";
 
-            int orderId;
+        try (Connection conn = DB.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
-            // 1. Insert into Order table
-            String sqlOrder =
-                    "INSERT INTO music.[Order] (order_datetime, subtotal, delivery_fee, total, status) " +
-                            "VALUES (GETDATE(), ?, ?, ?, 'Unconfirmed')";
-            try (PreparedStatement ps = conn.prepareStatement(sqlOrder, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setBigDecimal(1, subtotal);
-                ps.setBigDecimal(2, deliveryFee);
-                ps.setBigDecimal(3, total);
-                ps.executeUpdate();
-
-                try (ResultSet keys = ps.getGeneratedKeys()) {
-                    if (keys.next()) {
-                        orderId = keys.getInt(1);
-                    } else {
-                        throw new SQLException("Failed to get order_id");
-                    }
-                }
+            if (rs.next()) {
+                return rs.getInt("count");
             }
+        }
+        return 0;
+    }
 
-            // 2. Link to user via Places table
-            String sqlPlaces =
-                    "INSERT INTO music.Places (user_id, order_id) VALUES (?, ?)";
-            try (PreparedStatement ps = conn.prepareStatement(sqlPlaces)) {
-                ps.setInt(1, userId);
-                ps.setInt(2, orderId);
-                ps.executeUpdate();
-            }
+    /**
+     * Insert new order
+     */
+    public long insert(int userId, String orderNumber, BigDecimal totalAmount, String shippingAddress) throws SQLException {
+        String sql =
+                "INSERT INTO dbo.customer_order (user_id, order_number, status, total_amount, shipping_address) " +
+                        "VALUES (?, ?, 'Processing', ?, ?)";
 
-            conn.commit();
-            return orderId;
+        try (Connection conn = DB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, userId);
+            ps.setString(2, orderNumber);
+            ps.setBigDecimal(3, totalAmount);
+            ps.setString(4, shippingAddress);
+            ps.executeUpdate();
 
-        } catch (SQLException e) {
-            if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            throw e;
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.setAutoCommit(true);
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    return keys.getLong(1);
+                } else {
+                    throw new SQLException("Failed to get order id");
                 }
             }
         }
     }
 
     /**
-     * Map ResultSet to Order object (basic fields only)
+     * Map ResultSet to Order object
      */
     private Order mapBasic(ResultSet rs) throws SQLException {
         Order o = new Order();
-        o.setOrderId(rs.getInt("order_id"));
-        o.setOrderDatetime(rs.getObject("order_datetime", LocalDateTime.class));
-        o.setSubtotal(rs.getBigDecimal("subtotal"));
-        o.setDeliveryFee(rs.getBigDecimal("delivery_fee"));
-        o.setTotal(rs.getBigDecimal("total"));
+        o.setId(rs.getLong("id"));
+        o.setUserId(rs.getInt("user_id"));
+        o.setOrderNumber(rs.getString("order_number"));
         o.setStatus(rs.getString("status"));
-        o.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-        return o;
-    }
-
-    /**
-     * Map ResultSet to Order with payment and shipment details
-     */
-    private Order mapWithDetails(ResultSet rs) throws SQLException {
-        Order o = mapBasic(rs);
-
-        // Add payment status
-        String paymentStatus = rs.getString("payment_status");
-        o.setPaymentStatus(paymentStatus != null ? paymentStatus : "Pending");
-
-        // Add shipment status
-        String shipmentStatus = rs.getString("shipment_status");
-        o.setShipmentStatus(shipmentStatus != null ? shipmentStatus : "Not Shipped");
-
-        // Add customer name
-        String firstName = rs.getString("first_name");
-        String lastName = rs.getString("last_name");
-        if (firstName != null || lastName != null) {
-            o.setCustomerName((firstName != null ? firstName : "") + " " +
-                    (lastName != null ? lastName : ""));
-        }
-
-        // Add userId if present
-        try {
-            int userId = rs.getInt("user_id");
-            if (!rs.wasNull()) {
-                o.setUserId(userId);
-            }
-        } catch (SQLException e) {
-            // Column might not be in SELECT, ignore
-        }
-
+        o.setTotalAmount(rs.getBigDecimal("total_amount"));
+        o.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+        o.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        o.setShippingAddress(rs.getString("shipping_address"));
         return o;
     }
 }

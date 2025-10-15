@@ -13,8 +13,7 @@ import java.sql.SQLException;
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req,resp);
-
+        req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
     }
 
     @Override
@@ -30,20 +29,31 @@ public class LoginServlet extends HttpServlet {
         try {
             UserDAO userDAO = new UserDAO();
             User user = userDAO.findByEmail(email);
-            if (user != null && PasswordUtil.verify(password,user.getPasswordHash())) {
+
+            // ⚠️ IMPORTANT: Your new database stores PLAIN TEXT passwords
+            // So we use direct comparison instead of PasswordUtil.verify()
+            if (user != null && password.equals(user.getPassword())) {
                 HttpSession session = req.getSession(true);
-                session.setAttribute("userId", user.getUserId());
+                session.setAttribute("userId", user.getId());
                 session.setAttribute("userEmail", user.getEmail());
                 session.setAttribute("userName", user.getFullName());
-                // Update last login timestamp
-                userDAO.updateLastLogin(user.getUserId());
+                session.setAttribute("userRole", user.getRole());  // NEW: Store role
 
-                resp.sendRedirect(req.getContextPath() + "/dashboard");
+                // Update last login (if you add the column)
+                // userDAO.updateLastLogin(user.getId());
+
+                // ✅ REDIRECT BASED ON ROLE
+                if (user.isAdmin()) {
+                    // Admin user → Admin Dashboard
+                    resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
+                } else {
+                    // Regular customer → Customer Dashboard
+                    resp.sendRedirect(req.getContextPath() + "/dashboard");
+                }
                 return;
             } else {
                 req.setAttribute("error", "Invalid email or password");
                 req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
-
             }
 
         } catch (SQLException e) {
