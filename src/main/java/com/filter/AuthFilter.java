@@ -19,6 +19,7 @@ public class AuthFilter implements Filter {
 
         //public paths
         boolean publicPath = path.startsWith("/login")
+                || path.startsWith("/shop")
                 || path.startsWith("/dev-seed")  //dev only
                 || path.startsWith("/css/")
                 || path.startsWith("/js/")
