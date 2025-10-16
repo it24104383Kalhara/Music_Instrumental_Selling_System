@@ -722,7 +722,7 @@
     <div class="container text-center">
         <h2 class="display-5 section-title mb-4">Ready to Start Your Musical Journey?</h2>
         <p class="section-subtitle mb-4">Browse our collection and find your perfect instrument today</p>
-        <a href="${pageContext.request.contextPath}/login" class="btn-cta">
+        <a href="${pageContext.request.contextPath}/shop" class="btn-cta">
             <i class="bi bi-music-note-beamed me-2"></i>
             Start Shopping
         </a>
