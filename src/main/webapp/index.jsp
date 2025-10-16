@@ -502,7 +502,7 @@
                     Start your musical journey with the perfect companion from our carefully curated collection.
                 </p>
                 <div class="hero-buttons">
-                    <a href="${pageContext.request.contextPath}/login" class="btn btn-hero btn-hero-primary">
+                    <a href="${pageContext.request.contextPath}/shop" class="btn btn-hero btn-hero-primary">
                         <i class="bi bi-music-note-beamed me-2"></i>Shop Now
                     </a>
                     <a href="#categories" class="btn btn-hero btn-hero-outline">

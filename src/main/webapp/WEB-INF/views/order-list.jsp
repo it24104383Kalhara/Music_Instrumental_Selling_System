@@ -367,6 +367,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/shop">
+                        <i class="bi bi-shop me-1"></i>Shop
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link active" href="${pageContext.request.contextPath}/orders">
                         <i class="bi bi-list-ul me-1"></i>All Orders
                     </a>
