@@ -340,7 +340,7 @@
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/admin/dashboard">
+        <a class="navbar-brand" href="${pageContext.request.contextPath}/index.jsp">
             🎵 Musical Store <span class="admin-badge">Admin</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -490,7 +490,6 @@
                                         <th>Total Amount</th>
                                         <th>Status</th>
                                         <th>Created Date</th>
-                                        <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -524,12 +523,6 @@
                                                 <i class="bi bi-calendar3 me-1" style="color: var(--text-light);"></i>
                                                 <fmt:parseDate value="${order.createdAt}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDate" type="both" />
                                                 <fmt:formatDate value="${parsedDate}" pattern="MMM dd, yyyy"/>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary"
-                                                        onclick="viewOrderDetails(${order.id})">
-                                                    <i class="bi bi-eye me-1"></i>View
-                                                </button>
                                             </td>
                                         </tr>
                                     </c:forEach>
