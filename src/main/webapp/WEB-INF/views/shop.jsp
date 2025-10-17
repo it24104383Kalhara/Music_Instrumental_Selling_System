@@ -588,7 +588,7 @@
                                     <c:choose>
                                         <c:when test="${instrument.stockQuantity > 0}">
                                             <button class="btn btn-add-cart flex-grow-1"
-                                                    onclick="addToCart(${instrument.id}, '${instrument.name}')">
+                                                    onclick="addToCart(${instrument.id}, '${fn:escapeXml(instrument.name)}')">
                                                 <i class="bi bi-cart-plus me-1"></i>Add to Cart
                                             </button>
                                         </c:when>
@@ -617,19 +617,50 @@
 
 <!-- Cart Functions -->
 <script>
-    // Add to Cart Function (will be implemented when you create cart system)
     function addToCart(instrumentId, instrumentName) {
-        // For now, show an alert
-        alert('Adding "' + instrumentName + '" to cart!\n\n(Cart functionality will be implemented next)');
+        fetch('${pageContext.request.contextPath}/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'instrumentId=' + instrumentId + '&quantity=1'
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update cart badge
+                    document.getElementById('cartBadge').textContent = data.cartCount;
 
-        // Update cart badge
-        const badge = document.getElementById('cartBadge');
-        let currentCount = parseInt(badge.textContent);
-        badge.textContent = currentCount + 1;
-
-        // TODO: Send AJAX request to add item to cart
-        // fetch('/cart/add', { method: 'POST', body: ... })
+                    // Show success message
+                    showToastMessage('✅ Added to cart!', instrumentName + ' has been added to your cart', 'success');
+                } else {
+                    // Show error message
+                    showToastMessage('❌ Error', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToastMessage('❌ Error', 'Failed to add item to cart', 'error');
+            });
     }
+
+    // Toast notification function
+    function showToastMessage(title, message, type) {
+        // Simple alert for now (you can implement Bootstrap toast later)
+        alert(title + '\n' + message);
+    }
+
+    // Load cart count on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update cart badge with actual count
+        fetch('${pageContext.request.contextPath}/cart')
+            .then(response => response.text())
+            .then(html => {
+                // Extract cart count from response (or use separate API)
+                // For now, we'll keep it simple
+            })
+            .catch(error => console.error('Error loading cart count:', error));
+    });
 
     // Load cart count on page load
     document.addEventListener('DOMContentLoaded', function() {
