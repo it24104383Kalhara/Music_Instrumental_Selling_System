@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dao.OrderDAO;
+import com.dao.PaymentDAO;
 import com.model.Order;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -36,6 +37,13 @@ public class AdminDashboardServlet extends HttpServlet {
 
             // Fetch ALL orders with customer information
             List<Order> allOrders = orderDAO.getAllOrdersWithCustomerInfo();
+
+            // Get payment statistics
+            PaymentDAO paymentDAO = new PaymentDAO();
+            int pendingPaymentsCount = paymentDAO.getPaymentCountByStatus("Pending");
+
+            // Add to request attributes
+            request.setAttribute("pendingPaymentsCount", pendingPaymentsCount);
 
             // Get statistics
             int totalOrders = orderDAO.getTotalOrdersCount();
