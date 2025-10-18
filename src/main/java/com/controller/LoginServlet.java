@@ -46,6 +46,9 @@ public class LoginServlet extends HttpServlet {
                 if (user.isAdmin()) {
                     // Admin user → Admin Dashboard
                     resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
+                } else if ("Staff".equalsIgnoreCase(user.getRole())) {
+                    // Staff user → Staff Dashboard
+                    resp.sendRedirect(req.getContextPath() + "/staff/dashboard");
                 } else {
                     // Regular customer → Customer Dashboard
                     resp.sendRedirect(req.getContextPath() + "/dashboard");
