@@ -1,8 +1,7 @@
 package com.controller;
 
 import com.dao.FeedbackDAO;
-import com.dao.OrderDAO;
-import com.model.Order;
+import com.model.Feedback;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -10,8 +9,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/dashboard")
-public class DashboardServlet extends HttpServlet {
+@WebServlet("/reviews/my-reviews")
+public class MyReviewsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -19,34 +18,33 @@ public class DashboardServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
 
-        // Check if user is logged in
         if (session == null || session.getAttribute("userId") == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        // Get user ID from session
         int userId = (int) session.getAttribute("userId");
 
         try {
-            OrderDAO orderDAO = new OrderDAO();
             FeedbackDAO feedbackDAO = new FeedbackDAO();
+            List<Feedback> myReviews = feedbackDAO.getReviewsByUser(userId);
 
-            // Fetch user's orders (all of them, or use recentByUser(userId, 10) for limit)
-            List<Order> orders = orderDAO.getAllByUser(userId);
-
-            // Fetch reviewable orders (delivered items not yet reviewed)
+            // Also get reviewable orders (delivered items not yet reviewed)
             List<FeedbackDAO.ReviewableOrder> reviewableOrders = feedbackDAO.getReviewableOrders(userId);
 
-            // Set orders as request attribute
-            request.setAttribute("orders", orders);
+            request.setAttribute("myReviews", myReviews);
             request.setAttribute("reviewableOrders", reviewableOrders);
 
-            // Forward to dashboard JSP
-            request.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
+            // Check for success message
+            String success = request.getParameter("success");
+            if ("true".equals(success)) {
+                request.setAttribute("successMessage", "Review submitted successfully!");
+            }
+
+            request.getRequestDispatcher("/WEB-INF/views/my-reviews.jsp").forward(request, response);
 
         } catch (SQLException e) {
-            throw new ServletException("Failed to load orders", e);
+            throw new ServletException("Failed to load reviews", e);
         }
     }
 }

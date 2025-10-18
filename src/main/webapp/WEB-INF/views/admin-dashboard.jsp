@@ -368,6 +368,11 @@
                         <i class="bi bi-credit-card me-1"></i>Payments
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/admin/reviews">
+                        <i class="bi bi-star me-1"></i>Reviews
+                    </a>
+                </li>
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">

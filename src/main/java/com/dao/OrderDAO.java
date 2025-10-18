@@ -227,7 +227,11 @@ public class OrderDAO {
         o.setTotalAmount(rs.getBigDecimal("total_amount"));
         o.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
         o.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-        o.setShippingAddress(rs.getString("shipping_address"));
+
+        String shippingAddr = rs.getString("shipping_address");
+        if (shippingAddr != null) {
+            o.setShippingAddress(shippingAddr);
+        }
         return o;
     }
 }

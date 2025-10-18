@@ -324,6 +324,25 @@ To change this template use File | Settings | File Templates.
                 box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             }
         }
+        /* Review Button */
+        .btn-write-review {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-soft) 100%);
+            border: none;
+            color: var(--dark-brown);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-write-review:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 196, 48, 0.3);
+            color: var(--dark-brown);
+        }
     </style>
 </head>
 <body>
@@ -351,6 +370,11 @@ To change this template use File | Settings | File Templates.
                 <li class="nav-item">
                     <a class="nav-link" href="${pageContext.request.contextPath}/orders">
                         <i class="bi bi-list-ul me-1"></i>All Orders
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/reviews/my-reviews">
+                        <i class="bi bi-star me-1"></i>My Reviews
                     </a>
                 </li>
             </ul>
@@ -496,6 +520,78 @@ To change this template use File | Settings | File Templates.
             </div>
         </div>
     </div>
+
+    <!-- Reviewable Items Section -->
+    <c:if test="${not empty reviewableOrders}">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card orders-card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-star me-2" style="color: var(--primary-orange);"></i>
+                                Items You Can Review
+                            </h5>
+                            <a href="${pageContext.request.contextPath}/reviews/my-reviews" class="btn btn-sm btn-view-all">
+                                View All <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                <tr>
+                                    <th class="px-4">Instrument</th>
+                                    <th>Order Number</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:set var="reviewCount" value="0"/>
+                                <c:forEach var="item" items="${reviewableOrders}" varStatus="loop">
+                                    <c:if test="${loop.index < 3 && !item.alreadyReviewed}">
+                                        <c:set var="reviewCount" value="${reviewCount + 1}"/>
+                                        <tr>
+                                            <td class="px-4">
+                                                <i class="bi bi-music-note-beamed me-2" style="color: var(--primary-orange);"></i>
+                                                <strong>${item.instrumentName}</strong>
+                                            </td>
+                                            <td>
+                                                <i class="bi bi-receipt me-1" style="color: var(--text-light);"></i>
+                                                    ${item.orderNumber}
+                                            </td>
+                                            <td>
+                                                    <span class="badge order-badge badge-delivered">
+                                                        <i class="bi bi-check-circle me-1"></i>Delivered
+                                                    </span>
+                                            </td>
+                                            <td>
+                                                <a href="${pageContext.request.contextPath}/reviews/submit?orderId=${item.orderId}&instrumentId=${item.instrumentId}"
+                                                   class="btn btn-sm btn-write-review">
+                                                    <i class="bi bi-star me-1"></i>Write Review
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </c:if>
+                                </c:forEach>
+                                <c:if test="${reviewCount == 0}">
+                                    <tr>
+                                        <td colspan="4" class="text-center py-3 text-muted">
+                                            <i class="bi bi-check-circle me-2"></i>
+                                            All delivered items have been reviewed!
+                                        </td>
+                                    </tr>
+                                </c:if>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </c:if>
 
     <!-- Recent Orders Section -->
     <div class="row">
