@@ -156,3 +156,7 @@ select * from dbo.order_item;
 select * from dbo.payment;
 select * from dbo.product_feedback;
 
+-- Add Staff user
+INSERT INTO dbo.app_user (email, password, full_name, role) VALUES 
+('staff@musicstore.com', 'staff123', 'Store Manager', 'Staff');
+
