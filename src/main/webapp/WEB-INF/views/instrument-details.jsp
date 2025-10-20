@@ -103,6 +103,30 @@
             margin-bottom: 2rem;
         }
 
+        /* Product Image Styles */
+        .product-image-container {
+            position: relative;
+            background: linear-gradient(135deg, var(--primary-cream) 0%, #FFDAB9 100%);
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Move stock badge styles to be inside image container */
+        .product-image-container .stock-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            margin-bottom: 0;
+        }
+
         .product-title {
             font-size: 2rem;
             font-weight: 700;
@@ -341,15 +365,30 @@
         <!-- Product Details -->
         <div class="col-lg-6">
             <div class="product-card">
-                <div class="product-icon">
+                <!-- Product Image -->
+                <div class="product-image-container">
+                    <img src="${pageContext.request.contextPath}/images/instruments/${instrument.id}.jpg"
+                         alt="${instrument.name}"
+                         class="product-image"
+                         onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/images/instruments/default.jpg';">
+
+                    <!-- Stock Badge -->
                     <c:choose>
-                        <c:when test="${fn:containsIgnoreCase(instrument.name, 'guitar')}">🎸</c:when>
-                        <c:when test="${fn:containsIgnoreCase(instrument.name, 'piano') or fn:containsIgnoreCase(instrument.name, 'keyboard')}">🎹</c:when>
-                        <c:when test="${fn:containsIgnoreCase(instrument.name, 'drum')}">🥁</c:when>
-                        <c:when test="${fn:containsIgnoreCase(instrument.name, 'violin')}">🎻</c:when>
-                        <c:when test="${fn:containsIgnoreCase(instrument.name, 'saxophone')}">🎷</c:when>
-                        <c:when test="${fn:containsIgnoreCase(instrument.name, 'trumpet')}">🎺</c:when>
-                        <c:otherwise>🎵</c:otherwise>
+                        <c:when test="${instrument.stockQuantity > 10}">
+            <span class="stock-badge stock-in">
+                <i class="bi bi-check-circle me-1"></i>In Stock
+            </span>
+                        </c:when>
+                        <c:when test="${instrument.stockQuantity > 0}">
+            <span class="stock-badge stock-low">
+                <i class="bi bi-exclamation-triangle me-1"></i>Only ${instrument.stockQuantity} left
+            </span>
+                        </c:when>
+                        <c:otherwise>
+            <span class="stock-badge stock-out">
+                <i class="bi bi-x-circle me-1"></i>Out of Stock
+            </span>
+                        </c:otherwise>
                     </c:choose>
                 </div>
 
@@ -358,24 +397,6 @@
                 <div class="product-price">
                     $<fmt:formatNumber value="${instrument.price}" pattern="#,##0.00"/>
                 </div>
-
-                <c:choose>
-                    <c:when test="${instrument.stockQuantity > 10}">
-                        <span class="stock-badge stock-in">
-                            <i class="bi bi-check-circle me-1"></i>In Stock
-                        </span>
-                    </c:when>
-                    <c:when test="${instrument.stockQuantity > 0}">
-                        <span class="stock-badge stock-low">
-                            <i class="bi bi-exclamation-triangle me-1"></i>Only ${instrument.stockQuantity} left
-                        </span>
-                    </c:when>
-                    <c:otherwise>
-                        <span class="stock-badge stock-out">
-                            <i class="bi bi-x-circle me-1"></i>Out of Stock
-                        </span>
-                    </c:otherwise>
-                </c:choose>
 
                 <p class="product-description">
                     ${not empty instrument.description ? instrument.description : 'High-quality musical instrument perfect for musicians of all skill levels.'}
