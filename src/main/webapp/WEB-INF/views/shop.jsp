@@ -226,27 +226,22 @@
 
         .instrument-icon {
             background: linear-gradient(135deg, var(--primary-cream) 0%, var(--light-peach) 100%);
-            height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5rem;
+            height: 250px;  /* ← Increased from 180px */
             position: relative;
             overflow: hidden;
         }
 
-        .instrument-icon::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,140,97,0.1) 0%, transparent 70%);
-            animation: float 6s ease-in-out infinite;
+        /* NEW: Image styling */
+        .instrument-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translate(-25%, -25%); }
-            50% { transform: translate(-50%, -50%); }
+        /* Zoom effect on hover */
+        .instrument-card:hover .instrument-image {
+            transform: scale(1.1);
         }
 
         .stock-badge {
@@ -537,7 +532,13 @@
                         <div class="instrument-card">
                             <!-- Instrument Icon/Image -->
                             <div class="instrument-icon">
-                                <!-- Stock Badge -->
+                                <!-- Product Image -->
+                                <img src="${pageContext.request.contextPath}/images/instruments/${instrument.id}.jpg"
+                                     alt="${instrument.name}"
+                                     class="instrument-image"
+                                     onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/images/instruments/default.jpg';">
+
+                                <!-- Stock Badge (stays on top of image) -->
                                 <c:choose>
                                     <c:when test="${instrument.stockQuantity > 10}">
                                         <span class="stock-badge badge-in-stock">In Stock</span>
@@ -548,17 +549,6 @@
                                     <c:otherwise>
                                         <span class="stock-badge badge-out-stock">Out of Stock</span>
                                     </c:otherwise>
-                                </c:choose>
-
-                                <!-- Icon based on instrument name -->
-                                <c:choose>
-                                    <c:when test="${fn:containsIgnoreCase(instrument.name, 'guitar')}">🎸</c:when>
-                                    <c:when test="${fn:containsIgnoreCase(instrument.name, 'piano') or fn:containsIgnoreCase(instrument.name, 'keyboard')}">🎹</c:when>
-                                    <c:when test="${fn:containsIgnoreCase(instrument.name, 'drum')}">🥁</c:when>
-                                    <c:when test="${fn:containsIgnoreCase(instrument.name, 'violin')}">🎻</c:when>
-                                    <c:when test="${fn:containsIgnoreCase(instrument.name, 'saxophone')}">🎷</c:when>
-                                    <c:when test="${fn:containsIgnoreCase(instrument.name, 'trumpet')}">🎺</c:when>
-                                    <c:otherwise>🎵</c:otherwise>
                                 </c:choose>
                             </div>
 
