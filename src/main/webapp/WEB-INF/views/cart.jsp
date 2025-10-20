@@ -157,16 +157,21 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
 
-        .item-icon {
+        /* Cart Item Image */
+        .item-image {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, var(--primary-cream) 0%, var(--light-peach) 100%);
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
+            overflow: hidden;
             margin-right: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .cart-item-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--primary-cream) 0%, var(--light-peach) 100%);
         }
 
         .item-details {
@@ -504,15 +509,11 @@
                         <c:forEach var="entry" items="${cart}">
                             <c:set var="item" value="${entry.value}"/>
                             <div class="cart-item" data-instrument-id="${item.instrumentId}">
-                                <div class="item-icon">
-                                    <c:choose>
-                                        <c:when test="${fn:containsIgnoreCase(item.instrumentName, 'guitar')}">🎸</c:when>
-                                        <c:when test="${fn:containsIgnoreCase(item.instrumentName, 'piano') or fn:containsIgnoreCase(item.instrumentName, 'keyboard')}">🎹</c:when>
-                                        <c:when test="${fn:containsIgnoreCase(item.instrumentName, 'drum')}">🥁</c:when>
-                                        <c:when test="${fn:containsIgnoreCase(item.instrumentName, 'violin')}">🎻</c:when>
-                                        <c:when test="${fn:containsIgnoreCase(item.instrumentName, 'saxophone')}">🎷</c:when>
-                                        <c:otherwise>🎵</c:otherwise>
-                                    </c:choose>
+                                <div class="item-image">
+                                    <img src="${pageContext.request.contextPath}/images/instruments/${item.instrumentId}.jpg"
+                                         alt="${item.instrumentName}"
+                                         class="cart-item-image"
+                                         onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/images/instruments/default.jpg';">
                                 </div>
                                 <div class="item-details">
                                     <div class="item-name">${item.instrumentName}</div>
