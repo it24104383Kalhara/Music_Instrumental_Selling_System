@@ -11,8 +11,8 @@ public class DatabaseConfig {
     static {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:sqlserver://localhost:1433;databaseName=music_store;encrypt=true;trustServerCertificate=true");
-        config.setUsername("music_user"); // Update with your username
-        config.setPassword("music_pass_123"); // Update with your password
+        config.setUsername("music_user"); // username
+        config.setPassword("music_pass_123"); //  password
         config.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
         // Connection pool settings
