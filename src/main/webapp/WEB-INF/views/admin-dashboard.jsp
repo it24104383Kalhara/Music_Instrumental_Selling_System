@@ -571,20 +571,20 @@
             <i class="bi bi-file-earmark-bar-graph me-2" style="color: var(--primary-orange);"></i>
             Generate Reports
         </h5>
-        <p class="text-muted mb-3">Export and analyze business data (Coming Soon)</p>
+        <p class="text-muted mb-3">Export and analyze business data </p>
 
-        <button class="btn report-btn" onclick="alert('Sales report generation will be implemented soon!')">
+        <a href="${pageContext.request.contextPath}/admin/reports/sales" class="btn report-btn">
             <i class="bi bi-graph-up"></i>Sales Report
-        </button>
-        <button class="btn report-btn" onclick="alert('Order report generation will be implemented soon!')">
+        </a>
+        <a href="${pageContext.request.contextPath}/admin/reports/orders" class="btn report-btn">
             <i class="bi bi-file-text"></i>Order Report
-        </button>
-        <button class="btn report-btn" onclick="alert('Customer report generation will be implemented soon!')">
+        </a>
+        <a href="${pageContext.request.contextPath}/admin/reports/customers" class="btn report-btn">
             <i class="bi bi-people"></i>Customer Report
-        </button>
-        <button class="btn report-btn" onclick="alert('Inventory report generation will be implemented soon!')">
+        </a>
+        <a href="${pageContext.request.contextPath}/admin/reports/inventory" class="btn report-btn">
             <i class="bi bi-box-seam"></i>Inventory Report
-        </button>
+        </a>
     </div>
 </div>
 
