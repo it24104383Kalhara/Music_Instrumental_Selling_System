@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <%-- This style block is copied from your index.jsp to get all the theme colors --%>
     <style>
         :root {
             /* Softer Musical Color Palette */
@@ -105,13 +104,21 @@
         }
 
         .form-control {
-            border-radius: 8px;
+            border-radius: 8px; /* This page's theme uses 8px radius */
             padding: 0.8rem 1rem;
             border: 1px solid #E0E0E0;
         }
         .form-control:focus {
             border-color: var(--primary-orange-soft);
             box-shadow: 0 0 0 0.25rem rgba(255, 140, 97, 0.25);
+        }
+
+        /* --- NEW CSS --- */
+        /* This rule (from login.jsp) removes the right border and
+           rounds only the left corners of an input inside an input-group */
+        .input-group .form-control {
+            border-right: none;
+            border-radius: 8px 0 0 8px; /* Adapted to 8px */
         }
 
         .form-label {
@@ -129,6 +136,23 @@
             transition: all 0.3s ease;
             width: 100%;
             font-size: 1rem;
+        }
+
+        /* --- MODIFIED CSS --- */
+        .password-toggle {
+            background: var(--white);
+            border: 1px solid #E0E0E0; /* CHANGED: To match the .form-control border */
+            border-left: none;
+            border-radius: 0 8px 8px 0; /* CHANGED: Was 10px, now 8px to match .form-control */
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+        /* --- END OF CSS CHANGES --- */
+
+        .password-toggle:hover {
+            background: var(--bg-light);
+            border-color: var(--primary-orange-soft);
+            color: var(--primary-orange);
         }
 
         .btn-register:hover {
@@ -176,7 +200,6 @@
                     <a class="nav-link" href="${pageContext.request.contextPath}/#about">About</a>
                 </li>
                 <li class="nav-item">
-                    <%-- Use context path for servlet-based login link --%>
                     <a class="nav-link" href="${pageContext.request.contextPath}/login">
                         <i class="bi bi-person-circle"></i> Login
                     </a>
@@ -192,12 +215,14 @@
             <div class="col-md-7 col-lg-5">
                 <div class="register-card">
                     <h2 class="register-title">Create Your Account</h2>
+
+                    <%-- Alert for error messages (same as before) --%>
                     <c:if test="${not empty errorMessage}">
                         <div class="alert alert-danger" role="alert">
                                 ${errorMessage}
                         </div>
                     </c:if>
-                    <%-- Form sends data to the 'register' servlet URL --%>
+
                     <form action="${pageContext.request.contextPath}/register" method="POST">
                         <div class="mb-3">
                             <label for="fullName" class="form-label">Full Name</label>
@@ -211,14 +236,23 @@
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <button class="btn password-toggle" type="button" id="togglePassword" tabindex="-1">
+                                    <i class="bi bi-eye" id="toggleIconPassword"></i>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="mb-4">
                             <label for="confirmPassword" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                <button class="btn password-toggle" type="button" id="toggleConfirmPassword" tabindex="-1">
+                                    <i class="bi bi-eye" id="toggleIconConfirm"></i>
+                                </button>
+                            </div>
                         </div>
-
                         <div class="d-grid">
                             <button type="submit" class="btn btn-register">Create Account</button>
                         </div>
@@ -236,5 +270,29 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<script>
+    // Password toggle visibility
+    document.getElementById('togglePassword').addEventListener('click', function (e){
+        e.preventDefault();
+        const password = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIconPassword'); // Use unique ID
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        toggleIcon.classList.toggle('bi-eye');
+        toggleIcon.classList.toggle('bi-eye-slash');
+    });
+
+    // --- NEW JAVASCRIPT ---
+    // Added a second listener for the confirm password field
+    document.getElementById('toggleConfirmPassword').addEventListener('click', function (e){
+        e.preventDefault();
+        const password = document.getElementById('confirmPassword');
+        const toggleIcon = document.getElementById('toggleIconConfirm'); // Use unique ID
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        toggleIcon.classList.toggle('bi-eye');
+        toggleIcon.classList.toggle('bi-eye-slash');
+    });
+</script>
 </body>
 </html>
