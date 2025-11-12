@@ -3,14 +3,14 @@ package com.model;
 import java.time.LocalDateTime;
 
 public class User {
-    private int id;  // Changed from userId
+    private int id;
     private String email;
-    private String password;  // For form input
-    private String fullName;  // Changed from firstName/lastName
-    private String role;  // NEW: Admin or Customer
+    private String password;
+    private String fullName;
+    private String role;
     private LocalDateTime createdAt;
 
-    // Constructors
+
     public User() {
     }
 
