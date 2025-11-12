@@ -328,6 +328,8 @@
                             ${error}
                         <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert"></button>
                     </div>
+                    <%-- This is important! It removes the message from the session  so it doesn't appear again on the next page load. --%>
+                    <c:remove var="successMessage" scope="session" />
                 </c:if>
 
                 <!-- Login Form -->

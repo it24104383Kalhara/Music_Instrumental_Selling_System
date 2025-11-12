@@ -20,6 +20,7 @@ public class AuthFilter implements Filter {
         //public paths
         boolean publicPath = path.startsWith("/login")
                 || path.startsWith("/shop")
+                || path.startsWith("/register")
                 || path.startsWith("/cart")
                 || path.startsWith("/dev-seed")  //dev only
                 || path.startsWith("/css/")

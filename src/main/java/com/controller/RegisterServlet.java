@@ -1,5 +1,8 @@
 package com.controller;
 
+import com.dao.UserDAO;
+import com.model.User;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -27,5 +30,41 @@ public class RegisterServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req,resp);
             return;  // Stop processing this request
         }
+
+        try {
+            User existingUser = userDAO.findByEmail(email);
+            if (existingUser != null){
+                req.setAttribute("errorMessage", "An account from this email is already exists.");
+                req.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req,resp);
+                return;
+            }
+
+            // Create the new user
+            userDAO.create(email,fullName, password);
+
+            // Success. Redirect to the login page
+            req.getSession().setAttribute("successMessage", "Registration successful! Please log in.");
+
+            // Redirect to log in page
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+
+        } catch (Exception e) {
+            // This is a server-side error
+            e.printStackTrace();  // Log the error
+            req.setAttribute("errorMessage", "A Database error occurred. Please try again later.");
+            req.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req,resp);
+            return;
+
+        }
+    }
+
+    private UserDAO userDAO;
+
+    @Override
+    public void init() throws ServletException {
+        // initialize the userDAO when servlet starts
+        userDAO = new UserDAO();
+
     }
 }

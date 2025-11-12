@@ -192,7 +192,11 @@
             <div class="col-md-7 col-lg-5">
                 <div class="register-card">
                     <h2 class="register-title">Create Your Account</h2>
-
+                    <c:if test="${not empty errorMessage}">
+                        <div class="alert alert-danger" role="alert">
+                                ${errorMessage}
+                        </div>
+                    </c:if>
                     <%-- Form sends data to the 'register' servlet URL --%>
                     <form action="${pageContext.request.contextPath}/register" method="POST">
                         <div class="mb-3">
